@@ -2,6 +2,8 @@ from rest_framework import viewsets,serializers
 from .models import Book
 from accounts.models import CustomUser
 from rest_framework.permissions import IsAuthenticated
+from .custom_pagination import CustomPageNumberPagination
+from .custom_permission.cu_permission import BookPermission
 
 #get == list
 #post == create
@@ -26,8 +28,10 @@ class BookWriteSerializer(serializers.ModelSerializer):
 
 class BookViewsets(viewsets.ModelViewSet):
     queryset = Book.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated,BookPermission]
     serializer_class = BookReadSerializer
+    pagination_class = CustomPageNumberPagination
+  
 
     def get_serializer_class(self):
         if self.action in ['create','update','partial_update']:
